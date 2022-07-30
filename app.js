@@ -15,43 +15,42 @@ const state = {
 const root = document.getElementById("root");
 
 const render = (el) => {
-    const renderListProps = {
-        arr: state.tasks,
-        class: "render-todos-list",
-        isEdit: state.isEdit,
-        editId: state.id,
-        btnsArr: editDeleteBtnArr,
-        key: "task",
-      };
-      renderListProps.btnsArr[0].eventHandler = handleDelete;
-      renderListProps.btnsArr[1].eventHandler = toggleEdit;
-    
-      const addFormProps = {
-        arr: inputArr,
-        inputHandler: handleInput,
-        form: {
-          type: "add-form",
-          submitHandler: handleSubmit,
-          submitBtn: {
-            classList: "add-task-btn",
-            value: "ADD",
-          },
-        },
-      };
-      const editFormProps = {
-        arr: editArr,
-        inputHandler: handleInput,
-        // value1: state.id,
-        form: {
-          type: "edit-form",
-          submitHandler: handleEdit,
-          submitBtn: {
-            classList: "edit-task-btn",
-            value: "CHANGE",
-          },
-        },
-      };
-      editFormProps.arr[0].value = state.task;
+  const renderListProps = {
+    arr: state.tasks,
+    class: "render-todos-list",
+    isEdit: state.isEdit,
+    editId: state.id,
+    btnsArr: editDeleteBtnArr,
+    key: "task",
+  };
+  renderListProps.btnsArr[0].eventHandler = handleDelete;
+  renderListProps.btnsArr[1].eventHandler = toggleEdit;
+
+  const addFormProps = {
+    arr: inputArr,
+    inputHandler: handleInput,
+    form: {
+      type: "add-form",
+      submitHandler: handleSubmit,
+      submitBtn: {
+        classList: "add-task-btn",
+        value: "ADD",
+      },
+    },
+  };
+  const editFormProps = {
+    arr: editArr,
+    inputHandler: handleInput,
+    form: {
+      type: "edit-form",
+      submitHandler: handleEdit,
+      submitBtn: {
+        classList: "edit-task-btn",
+        value: "CHANGE",
+      },
+    },
+  };
+  editFormProps.arr[0].value = state.task;
 
   el.innerHTML = "";
   const anchorDiv = document.createElement("div");
@@ -64,7 +63,6 @@ const render = (el) => {
   main.innerHTML = "";
   AddTaskModule(addFormProps, main);
   RenderTodosModule(renderListProps, editFormProps, main);
-  
 };
 
 const handleInput = (e) => {
@@ -83,7 +81,8 @@ const handleSubmit = (e) => {
   document.querySelector("input").value = "";
   render(root);
 };
-const handleDelete = (id) => {
+const handleDelete = (todo) => {
+  let id = todo.id;
   let allTheOthers = state.tasks.filter((task) => task.id !== id);
   let theChosenOne = state.tasks.filter((task) => task.id === id);
   state.finished.push(theChosenOne);
@@ -98,15 +97,15 @@ const toggleEdit = (todo) => {
 };
 const handleEdit = (e) => {
   e.preventDefault();
-  let youveChanged = state.tasks.map(todo => {
-    if(todo.id = state.id){
-        todo.task = state.task
+  let youveChanged = state.tasks.map((todo) => {
+    if ((todo.id = state.id)) {
+      todo.task = state.task;
     }
-    return todo
-  })
-  state.tasks = youveChanged
-  state.id = ""
-  state.task = ""
+    return todo;
+  });
+  state.tasks = youveChanged;
+  state.id = "";
+  state.task = "";
   render(root);
 };
 

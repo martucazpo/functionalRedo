@@ -12,11 +12,7 @@ const List = (props, formProps, el) => {
       ul.append(li);
     } else if (props.btnsArr.length > 0) {
       li.innerText = item[props.key];
-      //NOT REUSABLE ****************
-      props.btnsArr[0].value1 = item.id;
-      props.btnsArr[1].value1 = item;
-      //******************************* */
-      props.btnsArr.forEach((btn) => Button(btn, li));
+      props.btnsArr.forEach((btn) => Button(btn, li, item));
       ul.append(li);
     } else {
       const li = document.createElement("li");

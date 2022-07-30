@@ -1,0 +1,30 @@
+import Button from "./Button.js";
+import Form from "./Form.js";
+
+const List = (props, formProps, el) => {
+  const ul = document.createElement("ul");
+  ul.classList.add(props.class);
+  ul.innerHTML = "";
+  props.arr.forEach((item) => {
+    const li = document.createElement("li");
+    if (props.isEdit && props.editId === item.id) {
+      Form(formProps, li);
+      ul.append(li);
+    } else if (props.btnsArr.length > 0) {
+      li.innerText = item[props.key];
+      //NOT REUSABLE ****************
+      props.btnsArr[0].value1 = item.id;
+      props.btnsArr[1].value1 = item;
+      //******************************* */
+      props.btnsArr.forEach((btn) => Button(btn, li));
+      ul.append(li);
+    } else {
+      const li = document.createElement("li");
+      li.innerText = item[props.key];
+      ul.append("li");
+    }
+  });
+  el.append(ul);
+};
+
+export default List;

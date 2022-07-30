@@ -5,7 +5,11 @@ const Input = (props, el) => {
     input.setAttribute("name", item.name);
     input.addEventListener("input", props.inputHandler);
     input.required = item.required;
-    item.value ? (input.value = item.value) : (input.value = "");
+    if (item.value) {
+      input.value = item.value;
+    } else {
+      input.value = "";
+    }
     el.append(input);
   });
 };
@@ -20,11 +24,7 @@ const SubmitBtn = (props, el) => {
 
 const Form = (props, el) => {
   const form = document.createElement("form");
-  props.form.type === "add-form"
-    ? form.addEventListener("submit", props.form.submitHandler)
-    : form.addEventListener("submit", (e) =>
-        props.form.submitHandler(e, value1)
-      );
+  form.addEventListener("submit", props.form.submitHandler);
   Input(props, form);
   SubmitBtn(props, form);
   el.append(form);

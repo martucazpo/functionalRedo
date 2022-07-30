@@ -1,8 +1,13 @@
 import HeaderModule from "./components/modules/HeaderModule.js";
 import AddTaskModule from "./components/modules/AddTaskModule.js";
 import RenderTodosModule from "./components/modules/RenderTodosModule.js";
-import RenderFinisedTodos from "./components/modules/RenderFinishedTodos.js";
-import { inputArr, editArr, editDeleteBtnArr, redoTaskArr } from "./js/arrays.js";
+import RenderFinishedTodos from "./components/modules/RenderFinishedTodos.js";
+import {
+  inputArr,
+  editArr,
+  editDeleteBtnArr,
+  redoTaskArr,
+} from "./js/arrays.js";
 import { uuidv4 } from "./js/uuidv4.js";
 
 const state = {
@@ -66,16 +71,16 @@ const render = (el) => {
 
   el.innerHTML = "";
   const anchorDiv = document.createElement("div");
+  const main = document.createElement("main");
   el.append(anchorDiv);
   anchorDiv.classList.add("anchor");
   anchorDiv.innerHTML = "";
   HeaderModule(anchorDiv);
-  const main = document.createElement("main");
   anchorDiv.append(main);
   main.innerHTML = "";
   AddTaskModule(formProps, main);
   RenderTodosModule(listProps, changeFormProps, main);
-  RenderFinisedTodos(finishedListProps, main)
+  RenderFinishedTodos(finishedListProps, main);
 };
 
 const handleInput = (e) => {
@@ -98,7 +103,12 @@ const handleDelete = (todo) => {
   let id = todo.id;
   let allTheOthers = state.tasks.filter((task) => task.id !== id);
   let theChosenOne = state.tasks.filter((task) => task.id === id)[0];
-  state.finished.push(theChosenOne);
+  if(state.finished.length < 6){
+    state.finished.unshift(theChosenOne);
+  } else {
+    state.finished.pop()
+    state.finished.unshift(theChosenOne)
+  }
   state.tasks = allTheOthers;
   render(root);
 };
@@ -122,13 +132,13 @@ const handleEdit = (e) => {
   render(root);
 };
 
-const handleRedo = (item) =>{
-let id = item.id
-let allTheOthers = state.finished.filter(todo => todo.id !== id)
-let theChosenOne = state.finished.filter(todo => todo.id === id)[0]
-state.tasks.push(theChosenOne)
-state.finished = allTheOthers
-render(root)
-}
+const handleRedo = (item) => {
+  let id = item.id;
+  let allTheOthers = state.finished.filter((todo) => todo.id !== id);
+  let theChosenOne = state.finished.filter((todo) => todo.id === id)[0];
+  state.tasks.push(theChosenOne);
+  state.finished = allTheOthers;
+  render(root);
+};
 
 render(root);

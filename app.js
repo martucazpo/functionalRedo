@@ -1,7 +1,8 @@
 import HeaderModule from "./components/modules/HeaderModule.js";
 import AddTaskModule from "./components/modules/AddTaskModule.js";
 import RenderTodosModule from "./components/modules/RenderTodosModule.js";
-import { inputArr, editArr, editDeleteBtnArr } from "./js/arrays.js";
+import RenderFinisedTodos from "./components/modules/RenderFinishedTodos.js";
+import { inputArr, editArr, editDeleteBtnArr, redoTaskArr } from "./js/arrays.js";
 import { uuidv4 } from "./js/uuidv4.js";
 
 const state = {
@@ -15,7 +16,7 @@ const state = {
 const root = document.getElementById("root");
 
 const render = (el) => {
-  const renderListProps = {
+  const listProps = {
     arr: state.tasks,
     class: "render-todos-list",
     isEdit: state.isEdit,
@@ -23,10 +24,20 @@ const render = (el) => {
     btnsArr: editDeleteBtnArr,
     key: "task",
   };
-  renderListProps.btnsArr[0].eventHandler = handleDelete;
-  renderListProps.btnsArr[1].eventHandler = toggleEdit;
+  Object.assign(listProps.btnsArr[0], { eventHandler: handleDelete });
+  Object.assign(listProps.btnsArr[1], { eventHandler: toggleEdit });
 
-  const addFormProps = {
+  const finishedListProps = {
+    arr: state.finished,
+    class: "render-finished-list",
+    isEdit: null,
+    editId: null,
+    btnsArr: redoTaskArr,
+    key: "task",
+  };
+  Object.assign(finishedListProps.btnsArr[0], { eventHandler: handleRedo });
+
+  const formProps = {
     arr: inputArr,
     inputHandler: handleInput,
     form: {
@@ -38,7 +49,8 @@ const render = (el) => {
       },
     },
   };
-  const editFormProps = {
+
+  const changeFormProps = {
     arr: editArr,
     inputHandler: handleInput,
     form: {
@@ -50,7 +62,7 @@ const render = (el) => {
       },
     },
   };
-  editFormProps.arr[0].value = state.task;
+  changeFormProps.arr[0].value = state.task;
 
   el.innerHTML = "";
   const anchorDiv = document.createElement("div");
@@ -61,8 +73,9 @@ const render = (el) => {
   const main = document.createElement("main");
   anchorDiv.append(main);
   main.innerHTML = "";
-  AddTaskModule(addFormProps, main);
-  RenderTodosModule(renderListProps, editFormProps, main);
+  AddTaskModule(formProps, main);
+  RenderTodosModule(listProps, changeFormProps, main);
+  RenderFinisedTodos(finishedListProps, main)
 };
 
 const handleInput = (e) => {
@@ -84,7 +97,7 @@ const handleSubmit = (e) => {
 const handleDelete = (todo) => {
   let id = todo.id;
   let allTheOthers = state.tasks.filter((task) => task.id !== id);
-  let theChosenOne = state.tasks.filter((task) => task.id === id);
+  let theChosenOne = state.tasks.filter((task) => task.id === id)[0];
   state.finished.push(theChosenOne);
   state.tasks = allTheOthers;
   render(root);
@@ -108,5 +121,14 @@ const handleEdit = (e) => {
   state.task = "";
   render(root);
 };
+
+const handleRedo = (item) =>{
+let id = item.id
+let allTheOthers = state.finished.filter(todo => todo.id !== id)
+let theChosenOne = state.finished.filter(todo => todo.id === id)[0]
+state.tasks.push(theChosenOne)
+state.finished = allTheOthers
+render(root)
+}
 
 render(root);

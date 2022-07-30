@@ -25,7 +25,10 @@ export const editDeleteBtnArr = [
 ]
 
 export const redoTaskArr = [
-
+    {
+        class: "redo-btn",
+        text: "REDO",
+    }
 ]
 
 //value added on with js

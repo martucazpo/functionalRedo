@@ -15,9 +15,8 @@ const List = (props, formProps, el) => {
       props.btnsArr.forEach((btn) => Button(btn, li, item));
       ul.append(li);
     } else {
-      const li = document.createElement("li");
       li.innerText = item[props.key];
-      ul.append("li");
+      ul.append(li)
     }
   });
   el.append(ul);
